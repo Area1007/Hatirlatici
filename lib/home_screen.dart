@@ -506,6 +506,170 @@ class _AnaSayfaState extends State<AnaSayfa> with WidgetsBindingObserver {
     await bildirimPlanla(updated);
   }
 
+  Future<void> hizliHatirlaticiAc() async {
+    final QuickReminderAction? action =
+        await Navigator.push<QuickReminderAction>(
+      context,
+      FastPageRoute<QuickReminderAction>(
+        builder: (_) => const QuickReminderScreen(),
+      ),
+    );
+
+    if (action == null || !mounted) return;
+
+    final AiReminderResult ai = action.result;
+
+    final String hedefListe = tumListeler.any(
+      (OzelListe l) =>
+          l.id == appSettingsNotifier.value.varsayilanListeId,
+    )
+        ? appSettingsNotifier.value.varsayilanListeId
+        : defaultListeId;
+
+    final Hatirlatici taslak = Hatirlatici(
+      id: DateTime.now().microsecondsSinceEpoch,
+      baslik: ai.baslik,
+      aciklama: ai.aciklama,
+      tarih: DateTime(
+        ai.tarih.year,
+        ai.tarih.month,
+        ai.tarih.day,
+      ),
+      saat: ai.saat,
+      dakika: ai.dakika,
+      tekrar: ai.tekrar,
+      tekrarGunleri: <int>[],
+      listeId: hedefListe,
+      oncelik: ai.oncelik,
+      altGorevler: <AltGorev>[],
+    );
+
+    if (action.detaylariDuzenle) {
+      final Hatirlatici? sonuc =
+          await Navigator.push<Hatirlatici>(
+        context,
+        FastPageRoute<Hatirlatici>(
+          builder: (_) => HatirlaticiDuzenleSayfasi(
+            mevcutHatirlatici: taslak,
+            listeler: tumListeler,
+          ),
+        ),
+      );
+
+      if (sonuc == null || !mounted) return;
+
+      setState(() {
+        hatirlaticilar.add(sonuc);
+      });
+
+      await _hatirlaticilariKaydet();
+      await bildirimPlanla(sonuc);
+      return;
+    }
+
+    setState(() {
+      hatirlaticilar.add(taslak);
+    });
+
+    await _hatirlaticilariKaydet();
+    await bildirimPlanla(taslak);
+
+    if (!mounted) return;
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('${taslak.baslik} oluşturuldu.'),
+      ),
+    );
+  }
+
+  Future<void> yeniHatirlaticiSecimiAc() async {
+    final Brightness brightness = Theme.of(context).brightness;
+
+    await showModalBottomSheet<void>(
+      context: context,
+      showDragHandle: true,
+      backgroundColor: AppColors.surface(brightness),
+      builder: (BuildContext sheetContext) {
+        return SafeArea(
+          top: false,
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(20, 4, 20, 24),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(
+                  'Yeni Hatırlatıcı',
+                  style: AppTextStyles.sectionTitle.copyWith(
+                    color: AppColors.textPrimary(brightness),
+                  ),
+                ),
+                const SizedBox(height: 6),
+                Text(
+                  'Nasıl oluşturmak istediğini seç.',
+                  style: AppTextStyles.body.copyWith(
+                    color: AppColors.textSecondary(brightness),
+                  ),
+                ),
+                const SizedBox(height: 18),
+                ListTile(
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 4),
+                  leading: Container(
+                    width: 44,
+                    height: 44,
+                    decoration: BoxDecoration(
+                      color: AppColors.primary.withValues(alpha: 0.16),
+                      borderRadius: BorderRadius.circular(14),
+                    ),
+                    child: const Icon(
+                      Icons.auto_awesome_rounded,
+                      color: AppColors.primary,
+                    ),
+                  ),
+                  title: const Text('AI ile oluştur'),
+                  subtitle: const Text(
+                    '“Yarın saat 5te toplantı” gibi doğal bir cümle yaz.',
+                  ),
+                  trailing: const Icon(Icons.chevron_right_rounded),
+                  onTap: () {
+                    Navigator.pop(sheetContext);
+                    hizliHatirlaticiAc();
+                  },
+                ),
+                const SizedBox(height: 6),
+                ListTile(
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 4),
+                  leading: Container(
+                    width: 44,
+                    height: 44,
+                    decoration: BoxDecoration(
+                      color: AppColors.completed.withValues(alpha: 0.14),
+                      borderRadius: BorderRadius.circular(14),
+                    ),
+                    child: const Icon(
+                      Icons.edit_calendar_rounded,
+                      color: AppColors.completed,
+                    ),
+                  ),
+                  title: const Text('Normal oluştur'),
+                  subtitle: const Text(
+                    'Tarih, saat, liste ve diğer ayrıntıları kendin seç.',
+                  ),
+                  trailing: const Icon(Icons.chevron_right_rounded),
+                  onTap: () {
+                    Navigator.pop(sheetContext);
+                    yeniHatirlatici();
+                  },
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   Future<void> yeniHatirlatici({String? listeId}) async {
     final String hedefListe = listeId ??
         (tumListeler.any(
@@ -1397,7 +1561,7 @@ class _AnaSayfaState extends State<AnaSayfa> with WidgetsBindingObserver {
         },
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => yeniHatirlatici(),
+        onPressed: yeniHatirlaticiSecimiAc,
         tooltip: 'Yeni Hatırlatıcı',
         child: const Icon(
           Icons.add_rounded,
