@@ -26,6 +26,12 @@
 		<string>$(FLUTTER_BUILD_NUMBER)</string>
 		<key>LSRequiresIPhoneOS</key>
 		<true/>
+		<key>NSCameraUsageDescription</key>
+		<string>Smart Reminder, hatırlatıcılarınıza fotoğraf ekleyebilmeniz için kameraya erişir.</string>
+		<key>NSPhotoLibraryUsageDescription</key>
+		<string>Smart Reminder, hatırlatıcılarınıza galerinizden fotoğraf ekleyebilmeniz için fotoğraf arşivinize erişir.</string>
+		<key>NSLocationWhenInUseUsageDescription</key>
+		<string>Smart Reminder, konuma bağlı özelliklerin çalışabilmesi için uygulamayı kullanırken konumunuza erişebilir.</string>
 		<key>UIApplicationSceneManifest</key>
 		<dict>
 			<key>UIApplicationSupportsMultipleScenes</key>
