@@ -560,12 +560,14 @@ class _TakvimSayfasiState extends State<TakvimSayfasi> {
   Future<void> _bottomNavTap(int index) async {
     switch (index) {
       case 0:
-        if (mounted) Navigator.pop(context);
+        if (mounted) {
+          Navigator.of(context).popUntil((Route<dynamic> route) => route.isFirst);
+        }
         break;
       case 1:
         break;
       case 2:
-        await Navigator.push<void>(
+        await Navigator.pushReplacement<void, void>(
           context,
           MaterialPageRoute<void>(
             builder: (_) => IstatistikSayfasi(
@@ -578,7 +580,7 @@ class _TakvimSayfasiState extends State<TakvimSayfasi> {
         );
         break;
       case 3:
-        await Navigator.push<void>(
+        await Navigator.pushReplacement<void, void>(
           context,
           MaterialPageRoute<void>(
             builder: (_) => AyarlarSayfasi(
@@ -589,7 +591,6 @@ class _TakvimSayfasiState extends State<TakvimSayfasi> {
             ),
           ),
         );
-        if (mounted) setState(() {});
         break;
     }
   }

@@ -436,7 +436,9 @@ class _AyarlarSayfasiState extends State<AyarlarSayfasi> {
   Future<void> _bottomNavTap(int index) async {
     switch (index) {
       case 0:
-        if (mounted) Navigator.pop(context);
+        if (mounted) {
+          Navigator.of(context).popUntil((Route<dynamic> route) => route.isFirst);
+        }
         break;
       case 1:
         await Navigator.pushReplacement<void, void>(

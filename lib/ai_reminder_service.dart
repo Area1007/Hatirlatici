@@ -50,7 +50,8 @@ class AiReminderResult {
 }
 
 class AiReminderService {
-  static const String _baseUrl = 'http://10.0.2.2:3000';
+  static const String _baseUrl =
+    'https://hatirlatici-backend.onrender.com';
 
   static Future<AiReminderResult> analizEt(String metin) async {
     final Uri url = Uri.parse(

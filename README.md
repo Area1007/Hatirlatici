@@ -1,17 +1,54 @@
-# hatirlatici
+# Hatırlatıcı
 
-A new Flutter project.
+Flutter ile geliştirilmiş, Türkçe arayüzlü bir hatırlatıcı uygulaması. Klasik hatırlatıcı oluşturmanın yanında Gemini destekli doğal dil girişiyle hızlı hatırlatıcı oluşturmayı destekler.
 
-## Getting Started
+## Özellikler
 
-This project is a starting point for a Flutter application.
+- Normal ve AI ile hızlı hatırlatıcı oluşturma
+- Tarih, saat, tekrar ve öncelik seçenekleri
+- Yerel bildirimler
+- Özel listeler
+- Takvim görünümü
+- İstatistikler
+- Açık/koyu tema desteği
+- Android ve iOS desteği
+- Render üzerinde çalışan ayrı Gemini backend'i
 
-A few resources to get you started if this is your first Flutter project:
+## Gereksinimler
 
-- [Learn Flutter](https://docs.flutter.dev/get-started/learn-flutter)
-- [Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Flutter learning resources](https://docs.flutter.dev/reference/learning-resources)
+- Flutter SDK
+- Dart (Flutter ile birlikte gelir)
+- Android için Android Studio/SDK
+- iOS için macOS + Xcode
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Kurulum
+
+```bash
+git clone <repo-url>
+cd <repo-folder>
+flutter pub get
+flutter run
+```
+
+## AI servisi
+
+Uygulama şu yayınlanmış backend adresini kullanır:
+
+```text
+https://hatirlatici-backend.onrender.com
+```
+
+Backend kaynak kodu ayrı bir repoda tutulmalıdır. API anahtarı mobil uygulamaya gömülmemiştir.
+
+## Launcher icon ve splash
+
+Gerekirse yeniden üretmek için:
+
+```bash
+dart run flutter_launcher_icons
+dart run flutter_native_splash:create
+```
+
+## Not
+
+`build/`, `.dart_tool/`, IDE önbellekleri ve yerel/generated dosyalar Git'e dahil edilmez.

@@ -273,11 +273,17 @@ class _HatirlaticiDuzenleSayfasiState
   }
 
   Widget _sectionTitle(String text) {
+    final Brightness brightness = Theme.of(context).brightness;
+
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
       child: Text(
         text,
-        style: const TextStyle(fontSize: 19, fontWeight: FontWeight.w800),
+        style: TextStyle(
+          fontSize: 19,
+          fontWeight: FontWeight.w800,
+          color: AppColors.textPrimary(brightness),
+        ),
       ),
     );
   }
@@ -288,22 +294,38 @@ class _HatirlaticiDuzenleSayfasiState
     required Widget trailing,
     VoidCallback? onTap,
   }) {
+    final Brightness brightness = Theme.of(context).brightness;
+
     return Material(
-      color: const Color(0xFF1B202A),
+      color: AppColors.surface(brightness),
       borderRadius: BorderRadius.circular(16),
       child: InkWell(
         onTap: onTap,
         borderRadius: BorderRadius.circular(16),
-        child: Padding(
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(
+              color: AppColors.border(brightness).withValues(alpha: 0.55),
+            ),
+          ),
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
           child: Row(
             children: <Widget>[
-              Icon(icon, size: 22, color: const Color(0xFFA9C5FF)),
+              Icon(
+                icon,
+                size: 22,
+                color: AppColors.primary,
+              ),
               const SizedBox(width: 13),
               Expanded(
                 child: Text(
                   title,
-                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    color: AppColors.textPrimary(brightness),
+                  ),
                 ),
               ),
               trailing,
@@ -315,11 +337,15 @@ class _HatirlaticiDuzenleSayfasiState
   }
 
   Widget _prioritySelector() {
+    final Brightness brightness = Theme.of(context).brightness;
+
     return Container(
       decoration: BoxDecoration(
-        color: const Color(0xFF1B202A),
+        color: AppColors.surface(brightness),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: const Color(0xFF343B47)),
+        border: Border.all(
+          color: AppColors.border(brightness).withValues(alpha: 0.55),
+        ),
       ),
       clipBehavior: Clip.antiAlias,
       child: Column(
@@ -332,18 +358,31 @@ class _HatirlaticiDuzenleSayfasiState
                 children: <Widget>[
                   Icon(Icons.flag_outlined, color: _priorityColor(oncelik)),
                   const SizedBox(width: 13),
-                  const Expanded(
-                    child: Text('Öncelik', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+                  Expanded(
+                    child: Text(
+                      'Öncelik',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        color: AppColors.textPrimary(brightness),
+                      ),
+                    ),
                   ),
                   Text(
                     oncelik,
-                    style: TextStyle(color: _priorityColor(oncelik), fontWeight: FontWeight.w700),
+                    style: TextStyle(
+                      color: _priorityColor(oncelik),
+                      fontWeight: FontWeight.w700,
+                    ),
                   ),
                   const SizedBox(width: 6),
                   AnimatedRotation(
                     turns: oncelikAcik ? 0.5 : 0,
                     duration: const Duration(milliseconds: 180),
-                    child: const Icon(Icons.keyboard_arrow_down_rounded),
+                    child: Icon(
+                      Icons.keyboard_arrow_down_rounded,
+                      color: AppColors.textSecondary(brightness),
+                    ),
                   ),
                 ],
               ),
@@ -351,7 +390,8 @@ class _HatirlaticiDuzenleSayfasiState
           ),
           AnimatedCrossFade(
             duration: const Duration(milliseconds: 180),
-            crossFadeState: oncelikAcik ? CrossFadeState.showSecond : CrossFadeState.showFirst,
+            crossFadeState:
+                oncelikAcik ? CrossFadeState.showSecond : CrossFadeState.showFirst,
             firstChild: const SizedBox(height: 0, width: double.infinity),
             secondChild: Column(
               children: oncelikSecenekleri.map((String value) {
@@ -363,22 +403,47 @@ class _HatirlaticiDuzenleSayfasiState
                   }),
                   child: Container(
                     width: double.infinity,
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-                    decoration: const BoxDecoration(
-                      border: Border(top: BorderSide(color: Color(0xFF303846))),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 14,
+                    ),
+                    decoration: BoxDecoration(
+                      color: selected
+                          ? AppColors.primary.withValues(alpha: 0.08)
+                          : Colors.transparent,
+                      border: Border(
+                        top: BorderSide(
+                          color: AppColors.border(brightness)
+                              .withValues(alpha: 0.45),
+                        ),
+                      ),
                     ),
                     child: Row(
                       children: <Widget>[
                         Container(
                           width: 10,
                           height: 10,
-                          decoration: BoxDecoration(color: _priorityColor(value), shape: BoxShape.circle),
+                          decoration: BoxDecoration(
+                            color: _priorityColor(value),
+                            shape: BoxShape.circle,
+                          ),
                         ),
                         const SizedBox(width: 12),
                         Expanded(
-                          child: Text(value, style: TextStyle(fontWeight: selected ? FontWeight.w800 : FontWeight.w500)),
+                          child: Text(
+                            value,
+                            style: TextStyle(
+                              fontWeight:
+                                  selected ? FontWeight.w800 : FontWeight.w500,
+                              color: AppColors.textPrimary(brightness),
+                            ),
+                          ),
                         ),
-                        if (selected) const Icon(Icons.check_rounded, color: Color(0xFF4C8DFF)),
+                        if (selected)
+                          const Icon(
+                            Icons.check_rounded,
+                            color: AppColors.primary,
+                          ),
                       ],
                     ),
                   ),
@@ -397,6 +462,8 @@ class _HatirlaticiDuzenleSayfasiState
     required VoidCallback onTap,
     bool selected = false,
   }) {
+    final Brightness brightness = Theme.of(context).brightness;
+
     return Expanded(
       child: InkWell(
         onTap: onTap,
@@ -404,19 +471,37 @@ class _HatirlaticiDuzenleSayfasiState
         child: Container(
           height: 82,
           decoration: BoxDecoration(
-            color: selected ? const Color(0xFF26344D) : const Color(0xFF252B35),
+            color: selected
+                ? AppColors.primary.withValues(alpha: 0.12)
+                : AppColors.surface(brightness),
             borderRadius: BorderRadius.circular(15),
             border: Border.all(
-              color: selected ? const Color(0xFFA9C5FF) : const Color(0xFF343B47),
+              color: selected
+                  ? AppColors.primary
+                  : AppColors.border(brightness).withValues(alpha: 0.55),
               width: selected ? 1.5 : 1,
             ),
           ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              Icon(icon, color: selected ? const Color(0xFFA9C5FF) : const Color(0xFFD9DEE8)),
+              Icon(
+                icon,
+                color: selected
+                    ? AppColors.primary
+                    : AppColors.textSecondary(brightness),
+              ),
               const SizedBox(height: 8),
-              Text(label, textAlign: TextAlign.center, style: TextStyle(color: selected ? const Color(0xFFA9C5FF) : null)),
+              Text(
+                label,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: selected
+                      ? AppColors.primary
+                      : AppColors.textPrimary(brightness),
+                  fontWeight: selected ? FontWeight.w700 : FontWeight.w500,
+                ),
+              ),
             ],
           ),
         ),
@@ -426,6 +511,7 @@ class _HatirlaticiDuzenleSayfasiState
 
   @override
   Widget build(BuildContext context) {
+    final Brightness brightness = Theme.of(context).brightness;
     final bool duzenleme = widget.mevcutHatirlatici != null;
     final DateTime now = DateTime.now();
     final DateTime selectedDateOnly = secilenTarih == null
@@ -461,7 +547,11 @@ class _HatirlaticiDuzenleSayfasiState
           children: <Widget>[
             TextField(
               controller: baslikController,
-              style: const TextStyle(fontSize: 29, fontWeight: FontWeight.w800),
+              style: TextStyle(
+                fontSize: 29,
+                fontWeight: FontWeight.w800,
+                color: AppColors.textPrimary(brightness),
+              ),
               decoration: const InputDecoration(
                 hintText: 'Hatırlatıcı başlığı',
                 border: InputBorder.none,
@@ -476,7 +566,11 @@ class _HatirlaticiDuzenleSayfasiState
               controller: aciklamaController,
               minLines: 2,
               maxLines: 4,
-              style: const TextStyle(fontSize: 16, height: 1.35),
+              style: TextStyle(
+                fontSize: 16,
+                height: 1.35,
+                color: AppColors.textPrimary(brightness),
+              ),
               decoration: const InputDecoration(
                 hintText: 'Açıklama ekle...',
                 border: InputBorder.none,
@@ -512,19 +606,42 @@ class _HatirlaticiDuzenleSayfasiState
                       width: 86,
                       padding: const EdgeInsets.symmetric(vertical: 12),
                       decoration: BoxDecoration(
-                        color: selected ? const Color(0xFF26344D) : const Color(0xFF151A22),
+                        color: selected
+                            ? AppColors.primary.withValues(alpha: 0.12)
+                            : AppColors.surface(brightness),
                         borderRadius: BorderRadius.circular(15),
                         border: Border.all(
-                          color: selected ? const Color(0xFFA9C5FF) : const Color(0xFF343B47),
+                          color: selected
+                              ? AppColors.primary
+                              : AppColors.border(brightness)
+                                  .withValues(alpha: 0.55),
                           width: selected ? 2 : 1,
                         ),
                       ),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
-                          Text(_dateLabel(d), style: TextStyle(fontSize: 12, fontWeight: FontWeight.w800, color: selected ? const Color(0xFFA9C5FF) : const Color(0xFFB7BECA))),
+                          Text(
+                            _dateLabel(d),
+                            style: TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w800,
+                              color: selected
+                                  ? AppColors.primary
+                                  : AppColors.textSecondary(brightness),
+                            ),
+                          ),
                           const SizedBox(height: 10),
-                          Text('${d.day}', style: TextStyle(fontSize: 24, fontWeight: FontWeight.w800, color: selected ? const Color(0xFFA9C5FF) : null)),
+                          Text(
+                            '${d.day}',
+                            style: TextStyle(
+                              fontSize: 24,
+                              fontWeight: FontWeight.w800,
+                              color: selected
+                                  ? AppColors.primary
+                                  : AppColors.textPrimary(brightness),
+                            ),
+                          ),
                         ],
                       ),
                     ),
@@ -570,10 +687,17 @@ class _HatirlaticiDuzenleSayfasiState
                 children: <Widget>[
                   Text(
                     secilenSaat == null ? 'Seçilmedi' : saatMetni(secilenSaat!.hour, secilenSaat!.minute),
-                    style: const TextStyle(color: Color(0xFFA9C5FF), fontWeight: FontWeight.w700),
+                    style: const TextStyle(
+                      color: AppColors.primary,
+                      fontWeight: FontWeight.w700,
+                    ),
                   ),
                   const SizedBox(width: 6),
-                  const Icon(Icons.chevron_right_rounded, size: 20),
+                  Icon(
+                    Icons.chevron_right_rounded,
+                    size: 20,
+                    color: AppColors.textSecondary(brightness),
+                  ),
                 ],
               ),
             ),
@@ -660,7 +784,13 @@ class _HatirlaticiDuzenleSayfasiState
                 onChanged: (bool value) => setState(() => altGorevlerBitinceTamamla = value),
               ),
               Container(
-                decoration: BoxDecoration(color: const Color(0xFF1B202A), borderRadius: BorderRadius.circular(16)),
+                decoration: BoxDecoration(
+                  color: AppColors.surface(brightness),
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(
+                    color: AppColors.border(brightness).withValues(alpha: 0.55),
+                  ),
+                ),
                 child: Column(
                   children: List<Widget>.generate(altGorevler.length, (int index) {
                     final AltGorev g = altGorevler[index];
@@ -819,6 +949,8 @@ class _YeniListeDialogState extends State<YeniListeDialog> {
 
   @override
   Widget build(BuildContext context) {
+    final Brightness brightness = Theme.of(context).brightness;
+
     return AlertDialog(
       title: Text(widget.mevcut == null ? 'Yeni Liste' : 'Listeyi Düzenle'),
       content: SingleChildScrollView(
@@ -881,10 +1013,15 @@ class _YeniListeDialogState extends State<YeniListeDialog> {
                     decoration: BoxDecoration(
                       color: selected
                           ? _secilenRenk
-                          : const Color(0xFF2C2C2E),
+                          : AppColors.surfaceAlt(brightness),
                       borderRadius: BorderRadius.circular(14),
                     ),
-                    child: Icon(icon, color: Colors.white),
+                    child: Icon(
+                      icon,
+                      color: selected
+                          ? Colors.white
+                          : AppColors.textPrimary(brightness),
+                    ),
                   ),
                 );
               }).toList(),
